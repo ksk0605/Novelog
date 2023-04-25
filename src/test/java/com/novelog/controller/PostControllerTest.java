@@ -36,7 +36,7 @@ class PostControllerTest {
                         .content("{\"title\" : \"글 제목입니다.\", \"content\": \"글 내용입니다.\"}")
                 ) // Exception을 던져줘야 함.
                 .andExpect(status().isOk())
-                .andExpect(content().string("Hello World"))
+                .andExpect(content().string("{}"))
                 .andDo(print()); // http 요청에 대한 summary 를 남겨줌.
 
 //        // 요즘 잘 안쓰는 방식 (key-value쌍으로 주고 받음)
@@ -49,6 +49,24 @@ class PostControllerTest {
 //        // 그러나 key value 쌍은 데이터의 표현의 한계가 있음
 //        // 따라서 요즘에는 json data 통신을 많이 사용함
 
+
+    }
+
+    @Test
+    @DisplayName("/posts 요청시 title 값은 필수이다.")
+    void test2() throws Exception {
+        // 글 제목
+
+        // 글 내용
+
+        //expected
+        mockMvc.perform(post("/posts")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"title\" : null, \"content\": \"글 내용입니다.\"}")
+                ) // Exception을 던져줘야 함.
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.title").value("제목을 입력해주세요")) // jsonPath 에 유요한 검증방법
+                .andDo(print()); // http 요청에 대한 summary 를 남겨줌.
 
     }
 }
